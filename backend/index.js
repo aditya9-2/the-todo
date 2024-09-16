@@ -76,48 +76,48 @@ app.post('/signin', async (req, res) => {
 
 
 
-    // try {
+    try {
 
-    const { email, password } = signINZodObject.parse(req.body);
+        const { email, password } = signINZodObject.parse(req.body);
 
-    const user = await UserModel.findOne({ email });
+        const user = await UserModel.findOne({ email });
 
-    if (!user) {
+        if (!user) {
 
-        return res.status(400).json({
+            return res.status(400).json({
 
-            message: "email not exists"
-        });
+                message: "email not exists"
+            });
+        }
+
+        const passwordMatched = await bcrypt.compare(password, user.password);
+
+        if (user && passwordMatched) {
+
+            const token = jwt.sign({
+                id: user._id.toString()
+            }, JWT_SECRET);
+
+            return res.status(200).json({
+                token
+            });
+        }
+
+    } catch (err) {
+
+        if (err instanceof z.ZodError) {
+
+            return res.status(400).json({
+                message: "Incorrect credentials",
+                errors: err.errors
+            });
+        }
+
+        return res.status(500).json({
+            message: "server error, try again later"
+        })
+
     }
-
-    const passwordMatched = await bcrypt.compare(password, user.password);
-
-    if (user && passwordMatched) {
-
-        const token = jwt.sign({
-            id: user._id.toString()
-        }, JWT_SECRET);
-
-        return res.status(200).json({
-            token
-        });
-    }
-
-    // } catch (err) {
-
-    //     if (err instanceof z.ZodError) {
-
-    //         return res.status(400).json({
-    //             message: "Incorrect credentials",
-    //             errors: err.errors
-    //         });
-    //     }
-
-    //     return res.status(500).json({
-    //         message: "server error, try again later"
-    //     })
-
-    // }
 });
 
 app.get('/todos', (req, res) => {
