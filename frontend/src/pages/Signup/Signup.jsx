@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Navbar from "../../components/Navbar/Navbar";
-import Passwordinput from "../../components/input/Passwordinput";
+import Passwordinput from "../../components/Input/Passwordinput";
 import { Link } from "react-router-dom";
 import { validateEmail } from "../../utils/helper";
 
@@ -48,7 +48,7 @@ const Signup = () => {
 
             <input
               type="text"
-              placeholder="EMail"
+              placeholder="Email"
               className="input-box"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
