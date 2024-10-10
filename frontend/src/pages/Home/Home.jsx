@@ -50,7 +50,13 @@ const Home = () => {
         contentLable=""
         className="w-[40%] max-h-3/4 bg-white mx-auto mt-16 p-5 overflow-scrol rounded-md"
       >
-        <AddEditTodos />
+        <AddEditTodos
+          type={openAddEditModal.type}
+          todoData={openAddEditModal.data}
+          onclose={() => {
+            setOpenAddEditModal({ isShown: false, type: "add", date: null });
+          }}
+        />
       </Modal>
     </>
   );
