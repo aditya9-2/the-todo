@@ -39,7 +39,8 @@ export const loginUser = async (req, res) => {
             })
         }
 
-        const accessToken = jwt.sign({ email: user.email }, process.env.JWT_SECRET);
+        const accessToken = jwt.sign({ userId: user._id, email: user.email }, process.env.JWT_SECRET);
+
 
         return res.status(200).json({
             error: false,
