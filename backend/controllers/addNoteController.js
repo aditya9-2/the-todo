@@ -15,14 +15,14 @@ const addNote = async (req, res) => {
 
     }
 
-    const { title, content, isPinned } = req.body;
+    const { title, content } = req.body;
     const { userId } = req.user;
 
     try {
         const note = new noteModel({
             title,
             content,
-            isPinned,
+
             userId
         });
 
