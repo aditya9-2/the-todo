@@ -104,6 +104,7 @@ const Home = () => {
           onclose={() => {
             setOpenAddEditModal({ isShown: false, type: "add", date: null });
           }}
+          getAllNotes={getAllNotes}
         />
       </Modal>
     </>
