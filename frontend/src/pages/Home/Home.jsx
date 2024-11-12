@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
+import moment from "moment";
 
 const Home = () => {
   const [openAddEditModal, setOpenAddEditModal] = useState({
@@ -16,9 +17,10 @@ const Home = () => {
   });
 
   const [userInfo, setUserInfo] = useState(null);
+  const [allNotes, setAllNotes] = useState([]);
   const navigate = useNavigate();
 
-  const getUserINfo = async () => {
+  const getUserInfo = async () => {
     try {
       const response = await axiosInstance.get("/users/get-user");
       if (response.data && response.data.user) {
@@ -32,8 +34,23 @@ const Home = () => {
     }
   };
 
+  const getAllNotes = async () => {
+    try {
+      const response = await axiosInstance.get("/users/get-all-notes");
+
+      console.log("response:", response.data);
+
+      if (response.data && response.data.allNotes) {
+        setAllNotes(response.data.allNotes);
+      }
+    } catch (error) {
+      console.log(`an unespected error accurred: ${error}`);
+    }
+  };
+
   useEffect(() => {
-    getUserINfo();
+    getUserInfo();
+    getAllNotes();
     return () => {};
   }, []);
 
@@ -43,15 +60,22 @@ const Home = () => {
 
       <div className="container mx-auto max-w-7xl">
         <div className="grid grid-cols-3 gap-4 mt-8">
-          <TodoCard
-            title="go to gym"
-            date="09 Sep 2024"
-            content="Go to gym after office"
-            isPinned={true}
-            onEdit={() => {}}
-            onDelete={() => {}}
-            onPinTodo={() => {}}
-          />
+          {allNotes.length > 0 ? (
+            allNotes.map((item) => (
+              <TodoCard
+                key={item._id}
+                title={item.title}
+                date={moment(item.createdOn).format("DD MMM YYYY")}
+                content={item.content}
+                isPinned={item.isPinned}
+                onEdit={() => {}}
+                onDelete={() => {}}
+                onPinTodo={() => {}}
+              />
+            ))
+          ) : (
+            <p>No notes available.</p>
+          )}
         </div>
       </div>
 
