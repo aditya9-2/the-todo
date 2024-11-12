@@ -1,29 +1,46 @@
 import { useState } from "react";
 import { MdClose } from "react-icons/md";
+import axiosInstance from "../../utils/axiosInstance";
 
 // todoData -> will add in prop when i need
 
 // eslint-disable-next-line react/prop-types
-const AddEditTodos = ({ type, onclose }) => {
+const AddEditTodos = ({ type, getAllNotes, onclose }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [error, SetError] = useState(null);
+  const [error, setError] = useState(null);
 
-  const addNewTodo = async () => {};
+  const addNewTodo = async () => {
+    try {
+      const response = await axiosInstance.post("/users/add-note", {
+        title: title,
+        content: content,
+      });
+
+      if (response.data && response.data.note) {
+        getAllNotes();
+        onclose();
+      }
+    } catch (error) {
+      if (error.response && error.response.data && error.respnse.data.message) {
+        setError(error.respnse.data.message);
+      }
+    }
+  };
   const editTodo = async () => {};
 
   const handleAddTodo = () => {
     if (!title) {
-      SetError("Please enter the title");
+      setError("Please enter the title");
       return;
     }
 
     if (!content) {
-      SetError("Please add description");
+      setError("Please add description");
       return;
     }
 
-    SetError("");
+    setError("");
 
     if (type === "edit") {
       editTodo();
