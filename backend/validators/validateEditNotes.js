@@ -1,10 +1,8 @@
 import { z } from "zod";
 
 export const editNoteSchema = z.object({
-
-    title: z.string('title is a string'),
-    content: z.string('content is a string'),
-    isPinned: z.boolean()
+    title: z.string().min(1, "Title cannot be empty"),
+    content: z.string().min(1, "Content cannot be empty"),
 })
 
 export const validateEditNotes = (data) => {
