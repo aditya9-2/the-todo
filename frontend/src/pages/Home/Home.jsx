@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
-import moment from "moment";
+// import moment from "moment";
 
 const Home = () => {
   const [openAddEditModal, setOpenAddEditModal] = useState({
@@ -65,7 +65,7 @@ const Home = () => {
               <TodoCard
                 key={item._id}
                 title={item.title}
-                date={moment(item.createdOn).format("DD MMM YYYY")}
+                date={item.createdOn}
                 content={item.content}
                 isPinned={item.isPinned}
                 onEdit={() => {}}
