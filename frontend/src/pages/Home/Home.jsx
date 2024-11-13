@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
+import Toast from "../../components/ToastMessage/Toast";
 
 const Home = () => {
   const [openAddEditModal, setOpenAddEditModal] = useState({
@@ -15,9 +16,34 @@ const Home = () => {
     data: null,
   });
 
+  const [showToastMessage, setShowToastMessage] = useState({
+    isShown: false,
+    message: "",
+    type: "add",
+  });
+
   const [userInfo, setUserInfo] = useState(null);
   const [allNotes, setAllNotes] = useState([]);
   const navigate = useNavigate();
+
+  const handleEdit = (noteDetails) => {
+    setOpenAddEditModal({ isShown: true, data: noteDetails, type: "edit" });
+  };
+
+  const handleCloseToast = () => {
+    setShowToastMessage({
+      isShown: false,
+      message: "",
+    });
+  };
+
+  const showToastMessageFunction = (message, type) => {
+    setShowToastMessage({
+      isShown: true,
+      message,
+      type,
+    });
+  };
 
   const getUserInfo = async () => {
     try {
@@ -36,9 +62,6 @@ const Home = () => {
   const getAllNotes = async () => {
     try {
       const response = await axiosInstance.get("/users/get-all-notes");
-
-      console.log("response:", response.data);
-
       if (response.data && response.data.allNotes) {
         setAllNotes(response.data.allNotes);
       }
@@ -67,7 +90,7 @@ const Home = () => {
                 date={item.createdOn}
                 content={item.content}
                 isPinned={item.isPinned}
-                onEdit={() => {}}
+                onEdit={() => handleEdit(item)}
                 onDelete={() => {}}
                 onPinTodo={() => {}}
               />
@@ -105,8 +128,16 @@ const Home = () => {
             setOpenAddEditModal({ isShown: false, type: "add", date: null });
           }}
           getAllNotes={getAllNotes}
+          showToastMessageFunction={showToastMessageFunction}
         />
       </Modal>
+
+      <Toast
+        isShown={showToastMessage.isShown}
+        message={showToastMessage.message}
+        type={showToastMessage.type}
+        onClose={handleCloseToast}
+      />
     </>
   );
 };
