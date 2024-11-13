@@ -1,13 +1,17 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 import { MdClose } from "react-icons/md";
 import axiosInstance from "../../utils/axiosInstance";
 
-// todoData -> will add in prop when i need
-
-// eslint-disable-next-line react/prop-types
-const AddEditTodos = ({ type, getAllNotes, onclose }) => {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+const AddEditTodos = ({
+  todoData,
+  type,
+  getAllNotes,
+  onclose,
+  showToastMessageFunction,
+}) => {
+  const [title, setTitle] = useState(todoData?.title || "");
+  const [content, setContent] = useState(todoData?.content || "");
   const [error, setError] = useState(null);
 
   const addNewTodo = async () => {
@@ -17,17 +21,50 @@ const AddEditTodos = ({ type, getAllNotes, onclose }) => {
         content: content,
       });
 
-      if (response.data && response.data.note) {
+      if (response?.data?.note) {
+        showToastMessageFunction("Todo Added Successfully", "add");
         getAllNotes();
         onclose();
       }
     } catch (error) {
-      if (error.response && error.response.data && error.respnse.data.message) {
-        setError(error.respnse.data.message);
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setError(error.response.data.message);
+      } else {
+        setError("An unexpected error occurred");
       }
     }
   };
-  const editTodo = async () => {};
+
+  const editTodo = async () => {
+    const noteId = todoData._id;
+
+    try {
+      const response = await axiosInstance.put(`/users/edit-note/${noteId}`, {
+        title: title,
+        content: content,
+      });
+
+      if (response?.data?.note) {
+        showToastMessageFunction("Todo edited Successfully", "edit");
+        getAllNotes();
+        onclose();
+      }
+    } catch (error) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setError(error.response.data.message);
+      } else {
+        setError("An unexpected error occurred");
+      }
+    }
+  };
 
   const handleAddTodo = () => {
     if (!title) {
@@ -88,7 +125,7 @@ const AddEditTodos = ({ type, getAllNotes, onclose }) => {
         className="btn-primary font-medium mt-5 p-3"
         onClick={handleAddTodo}
       >
-        ADD
+        {type === "edit" ? "UPDATE" : "ADD"}
       </button>
     </div>
   );
