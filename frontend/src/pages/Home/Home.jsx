@@ -30,18 +30,18 @@ const Home = () => {
     setOpenAddEditModal({ isShown: true, data: noteDetails, type: "edit" });
   };
 
-  const handleCloseToast = () => {
-    setShowToastMessage({
-      isShown: false,
-      message: "",
-    });
-  };
-
   const showToastMessageFunction = (message, type) => {
     setShowToastMessage({
       isShown: true,
       message,
       type,
+    });
+  };
+
+  const handleCloseToast = () => {
+    setShowToastMessage({
+      isShown: false,
+      message: "",
     });
   };
 
@@ -70,6 +70,29 @@ const Home = () => {
     }
   };
 
+  const deleteTodo = async (data) => {
+    const noteId = data._id;
+
+    try {
+      const response = await axiosInstance.delete(
+        `/users/delete-note/${noteId}`
+      );
+
+      if (response?.data?.note) {
+        showToastMessageFunction("Todo deleted Successfully", "delete");
+        getAllNotes();
+      }
+    } catch (error) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        console.log(error.response.data.message);
+      }
+    }
+  };
+
   useEffect(() => {
     getUserInfo();
     getAllNotes();
@@ -91,7 +114,7 @@ const Home = () => {
                 content={item.content}
                 isPinned={item.isPinned}
                 onEdit={() => handleEdit(item)}
-                onDelete={() => {}}
+                onDelete={() => deleteTodo(item)}
                 onPinTodo={() => {}}
               />
             ))
