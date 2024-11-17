@@ -8,6 +8,8 @@ import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
 import Toast from "../../components/ToastMessage/Toast";
+import EmpltyCard from "../../components/EmptyCard/EmpltyCard";
+import emptyNote from "../../assets/images/empty-note.svg";
 
 const Home = () => {
   const [openAddEditModal, setOpenAddEditModal] = useState({
@@ -78,7 +80,7 @@ const Home = () => {
         `/users/delete-note/${noteId}`
       );
 
-      if (response?.data?.note) {
+      if (response.data && !response.data.error) {
         showToastMessageFunction("Todo deleted Successfully", "delete");
         getAllNotes();
       }
@@ -104,7 +106,12 @@ const Home = () => {
       <Navbar userInfo={userInfo} />
 
       <div className="container mx-auto max-w-7xl">
-        <div className="grid grid-cols-3 gap-4 mt-8">
+        {/* Conditionally apply the grid-cols-3 class based on the length of allNotes */}
+        <div
+          className={`grid gap-4 mt-8 ${
+            allNotes.length > 0 ? "grid-cols-3" : ""
+          }`}
+        >
           {allNotes.length > 0 ? (
             allNotes.map((item) => (
               <TodoCard
@@ -119,7 +126,10 @@ const Home = () => {
               />
             ))
           ) : (
-            <p>No notes available.</p>
+            <EmpltyCard
+              imgSrc={emptyNote}
+              message={`Start creating your first Todo note! Click the 'add' button to jot down your ideas, thoughts, and reminders. Let's start a manageable journey of your life!`}
+            />
           )}
         </div>
       </div>
