@@ -10,6 +10,7 @@ import axiosInstance from "../../utils/axiosInstance";
 import Toast from "../../components/ToastMessage/Toast";
 import EmpltyCard from "../../components/EmptyCard/EmpltyCard";
 import emptyNote from "../../assets/images/empty-note.svg";
+import noNoteImg from "../../assets/images/no-note.svg";
 
 const Home = () => {
   const [openAddEditModal, setOpenAddEditModal] = useState({
@@ -26,6 +27,7 @@ const Home = () => {
 
   const [userInfo, setUserInfo] = useState(null);
   const [allNotes, setAllNotes] = useState([]);
+  const [isSearch, setIsSearch] = useState(false);
   const navigate = useNavigate();
 
   const handleEdit = (noteDetails) => {
@@ -95,6 +97,26 @@ const Home = () => {
     }
   };
 
+  const onSearchNote = async (query) => {
+    try {
+      const response = await axiosInstance.get("users/search-notes", {
+        params: { query },
+      });
+
+      if (response.data && response.data.notes) {
+        setIsSearch(true);
+        setAllNotes(response.data.notes);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleClearSearch = () => {
+    setIsSearch(false);
+    getAllNotes();
+  };
+
   useEffect(() => {
     getUserInfo();
     getAllNotes();
@@ -103,7 +125,11 @@ const Home = () => {
 
   return (
     <>
-      <Navbar userInfo={userInfo} />
+      <Navbar
+        userInfo={userInfo}
+        onSearchNote={onSearchNote}
+        handleClearSearch={handleClearSearch}
+      />
 
       <div className="container mx-auto max-w-7xl">
         {/* Conditionally apply the grid-cols-3 class based on the length of allNotes */}
@@ -127,8 +153,12 @@ const Home = () => {
             ))
           ) : (
             <EmpltyCard
-              imgSrc={emptyNote}
-              message={`Start creating your first Todo note! Click the 'add' button to jot down your ideas, thoughts, and reminders. Let's start a manageable journey of your life!`}
+              imgSrc={isSearch ? noNoteImg : emptyNote}
+              message={
+                isSearch
+                  ? `Oops! No todo found matching your search`
+                  : `Start creating your first Todo note! Click the 'add' button to jot down your ideas, thoughts, and reminders. Let's start a manageable journey of your life!`
+              }
             />
           )}
         </div>
