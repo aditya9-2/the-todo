@@ -14,8 +14,8 @@ app.use(cors({ origin: '*' }));
 app.use('/users', userRouter);
 
 
-connectDB();
 
-app.listen(port, () => {
+app.listen(port, async () => {
+    await connectDB();
     console.log(`App listens on: http://localhost:${port}`);
 });
