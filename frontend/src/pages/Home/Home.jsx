@@ -117,6 +117,26 @@ const Home = () => {
     getAllNotes();
   };
 
+  const updateIsPinned = async (todoData) => {
+    const noteId = todoData._id;
+
+    try {
+      const response = await axiosInstance.put(
+        `/users/update-note-pinned/${noteId}`,
+        {
+          isPinned: !noteId.isPinned,
+        }
+      );
+
+      if (response.data && response.data.note) {
+        showToastMessageFunction("Todo edited Successfully", "edit");
+        getAllNotes();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getUserInfo();
     getAllNotes();
@@ -148,7 +168,7 @@ const Home = () => {
                 isPinned={item.isPinned}
                 onEdit={() => handleEdit(item)}
                 onDelete={() => deleteTodo(item)}
-                onPinTodo={() => {}}
+                onPinTodo={() => updateIsPinned(item)}
               />
             ))
           ) : (
