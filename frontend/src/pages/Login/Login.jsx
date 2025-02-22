@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import Navbar from "../../components/Navbar/Navbar";
+
 import Passwordinput from "../../components/Input/Passwordinput";
 import { useState } from "react";
 import { validateEmail } from "../../utils/helper";
@@ -53,8 +53,6 @@ const Login = () => {
   };
   return (
     <>
-      <Navbar />
-
       <div className="flex flex-center justify-center mt-28">
         <div className="w-96 border rounded bg-white px-7 py-10">
           <form onSubmit={handleLogin}>

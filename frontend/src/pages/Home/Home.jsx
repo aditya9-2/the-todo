@@ -145,11 +145,13 @@ const Home = () => {
 
   return (
     <>
-      <Navbar
-        userInfo={userInfo}
-        onSearchNote={onSearchNote}
-        handleClearSearch={handleClearSearch}
-      />
+      {userInfo && (
+        <Navbar
+          userInfo={userInfo}
+          onSearchNote={onSearchNote}
+          handleClearSearch={handleClearSearch}
+        />
+      )}
 
       <div className="container mx-auto max-w-7xl">
         {/* Conditionally apply the grid-cols-3 class based on the length of allNotes */}
