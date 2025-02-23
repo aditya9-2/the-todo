@@ -15,12 +15,18 @@ const AddEditTodos = ({
   const [error, setError] = useState(null);
 
   const addNewTodo = async () => {
+    const token = localStorage.getItem("token");
     try {
       const response = await axios.post(
-        `${import.meta.env.BASE_URL}/users/add-note`,
+        `${import.meta.env.VITE_BASE_URL}/users/add-note`,
         {
           title: title,
           content: content,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
@@ -46,11 +52,17 @@ const AddEditTodos = ({
     const noteId = todoData._id;
 
     try {
+      const token = localStorage.getItem("token");
       const response = await axios.put(
-        `${import.meta.env.BASE_URL}/users/edit-note/${noteId}`,
+        `${import.meta.env.VITE_BASE_URL}/users/edit-note/${noteId}`,
         {
           title: title,
           content: content,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 

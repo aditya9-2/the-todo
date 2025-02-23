@@ -51,8 +51,14 @@ const Home = () => {
 
   const getUserInfo = async () => {
     try {
+      const token = localStorage.getItem("token");
       const response = await axios.get(
-        `${import.meta.env.BASE_URL}/users/get-user`
+        `${import.meta.env.VITE_BASE_URL}/users/get-user`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       if (response.data && response.data.user) {
         setUserInfo(response.data.user);
@@ -67,11 +73,19 @@ const Home = () => {
 
   const getAllNotes = async () => {
     try {
+      const token = localStorage.getItem("token");
       const response = await axios.get(
-        `${import.meta.env.BASE_URL}/users/get-all-notes`
+        `${import.meta.env.VITE_BASE_URL}/users/get-all-notes`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
-      if (response.data && response.data.allNotes) {
+      if (response.data && Array.isArray(response.data.allNotes)) {
         setAllNotes(response.data.allNotes);
+      } else {
+        setAllNotes([]);
       }
     } catch (error) {
       console.log(`an unespected error accurred: ${error}`);
@@ -82,8 +96,14 @@ const Home = () => {
     const noteId = data._id;
 
     try {
+      const token = localStorage.getItem("token");
       const response = await axios.delete(
-        `${import.meta.env.BASE_URL}/users/delete-note/${noteId}`
+        `${import.meta.env.VITE_BASE_URL}/users/delete-note/${noteId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       if (response.data && !response.data.error) {
@@ -103,10 +123,13 @@ const Home = () => {
 
   const onSearchNote = async (query) => {
     try {
+      const token = localStorage.getItem("token");
+
       const response = await axios.get(
-        `${import.meta.env.BASE_URL}users/search-notes`,
+        `${import.meta.env.VITE_BASE_URL}/users/search-notes`,
         {
           params: { query },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
@@ -126,12 +149,25 @@ const Home = () => {
 
   const updateIsPinned = async (todoData) => {
     const noteId = todoData._id;
+    const newPinnedState = !todoData.isPinned;
 
     try {
+      const token = localStorage.getItem("token");
+      setAllNotes((prevNotes) =>
+        prevNotes.map((note) =>
+          note._id === noteId ? { ...note, isPinned: newPinnedState } : note
+        )
+      );
+
       const response = await axios.put(
-        `${import.meta.env.BASE_URL}/users/update-note-pinned/${noteId}`,
+        `${import.meta.env.VITE_BASE_URL}/users/update-note-pinned/${noteId}`,
         {
-          isPinned: !noteId.isPinned,
+          isPinned: newPinnedState,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 

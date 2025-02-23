@@ -30,12 +30,14 @@ const Login = () => {
     //Login API Call here
     try {
       const response = await axios.post(
-        `${import.meta.env.BASE_URL}/users/login`,
+        `${import.meta.env.VITE_BASE_URL}/users/login`,
         {
           email: email,
           password: password,
         }
       );
+
+      console.log(response.data);
 
       if (response.data && response.data.accessToken) {
         localStorage.setItem("token", response.data.accessToken);

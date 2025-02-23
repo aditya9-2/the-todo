@@ -34,7 +34,7 @@ const Signup = () => {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.BASE_URL}/users/create-account`,
+        `${import.meta.env.VITE_BASE_URL}/users/create-account`,
         {
           fullName: name,
           email: email,
@@ -42,8 +42,7 @@ const Signup = () => {
         }
       );
 
-      if (response.data && response.data.accessToken) {
-        localStorage.setItem("token", response.data.accessToken);
+      if (response.data) {
         navigate("/login");
       }
     } catch (error) {
