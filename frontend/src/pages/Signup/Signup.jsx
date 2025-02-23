@@ -2,7 +2,7 @@ import { useState } from "react";
 import Passwordinput from "../../components/Input/Passwordinput";
 import { Link, useNavigate } from "react-router-dom";
 import { validateEmail } from "../../utils/helper";
-import axiosInstance from "../../utils/axiosInstance";
+import axios from "axios";
 
 const Signup = () => {
   const [name, setName] = useState("");
@@ -33,11 +33,14 @@ const Signup = () => {
     setError("");
 
     try {
-      const response = await axiosInstance.post("/users/create-account", {
-        fullName: name,
-        email: email,
-        password: password,
-      });
+      const response = await axios.post(
+        `${import.meta.env.BASE_URL}/users/create-account`,
+        {
+          fullName: name,
+          email: email,
+          password: password,
+        }
+      );
 
       if (response.data && response.data.accessToken) {
         localStorage.setItem("token", response.data.accessToken);

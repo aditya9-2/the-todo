@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
 import { MdClose } from "react-icons/md";
-import axiosInstance from "../../utils/axiosInstance";
+import axios from "axios";
 
 const AddEditTodos = ({
   todoData,
@@ -16,10 +16,13 @@ const AddEditTodos = ({
 
   const addNewTodo = async () => {
     try {
-      const response = await axiosInstance.post("/users/add-note", {
-        title: title,
-        content: content,
-      });
+      const response = await axios.post(
+        `${import.meta.env.BASE_URL}/users/add-note`,
+        {
+          title: title,
+          content: content,
+        }
+      );
 
       if (response?.data?.note) {
         showToastMessageFunction("Todo Added Successfully", "add");
@@ -43,10 +46,13 @@ const AddEditTodos = ({
     const noteId = todoData._id;
 
     try {
-      const response = await axiosInstance.put(`/users/edit-note/${noteId}`, {
-        title: title,
-        content: content,
-      });
+      const response = await axios.put(
+        `${import.meta.env.BASE_URL}/users/edit-note/${noteId}`,
+        {
+          title: title,
+          content: content,
+        }
+      );
 
       if (response?.data?.note) {
         showToastMessageFunction("Todo edited Successfully", "edit");

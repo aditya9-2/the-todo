@@ -11,6 +11,7 @@ const Navbar = ({ userInfo, onSearchNote, handleClearSearch }) => {
 
   const onLogout = () => {
     localStorage.clear();
+    window.location.reload();
     navigate("/login");
   };
 

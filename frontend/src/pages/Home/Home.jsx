@@ -6,11 +6,11 @@ import AddEditTodos from "./AddEditTodos";
 import { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../../utils/axiosInstance";
 import Toast from "../../components/ToastMessage/Toast";
 import EmpltyCard from "../../components/EmptyCard/EmpltyCard";
 import emptyNote from "../../assets/images/empty-note.svg";
 import noNoteImg from "../../assets/images/no-note.svg";
+import axios from "axios";
 
 const Home = () => {
   const [openAddEditModal, setOpenAddEditModal] = useState({
@@ -51,7 +51,9 @@ const Home = () => {
 
   const getUserInfo = async () => {
     try {
-      const response = await axiosInstance.get("/users/get-user");
+      const response = await axios.get(
+        `${import.meta.env.BASE_URL}/users/get-user`
+      );
       if (response.data && response.data.user) {
         setUserInfo(response.data.user);
       }
@@ -65,7 +67,9 @@ const Home = () => {
 
   const getAllNotes = async () => {
     try {
-      const response = await axiosInstance.get("/users/get-all-notes");
+      const response = await axios.get(
+        `${import.meta.env.BASE_URL}/users/get-all-notes`
+      );
       if (response.data && response.data.allNotes) {
         setAllNotes(response.data.allNotes);
       }
@@ -78,8 +82,8 @@ const Home = () => {
     const noteId = data._id;
 
     try {
-      const response = await axiosInstance.delete(
-        `/users/delete-note/${noteId}`
+      const response = await axios.delete(
+        `${import.meta.env.BASE_URL}/users/delete-note/${noteId}`
       );
 
       if (response.data && !response.data.error) {
@@ -99,9 +103,12 @@ const Home = () => {
 
   const onSearchNote = async (query) => {
     try {
-      const response = await axiosInstance.get("users/search-notes", {
-        params: { query },
-      });
+      const response = await axios.get(
+        `${import.meta.env.BASE_URL}users/search-notes`,
+        {
+          params: { query },
+        }
+      );
 
       if (response.data && response.data.notes) {
         setIsSearch(true);
@@ -121,8 +128,8 @@ const Home = () => {
     const noteId = todoData._id;
 
     try {
-      const response = await axiosInstance.put(
-        `/users/update-note-pinned/${noteId}`,
+      const response = await axios.put(
+        `${import.meta.env.BASE_URL}/users/update-note-pinned/${noteId}`,
         {
           isPinned: !noteId.isPinned,
         }

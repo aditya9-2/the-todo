@@ -3,7 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import Passwordinput from "../../components/Input/Passwordinput";
 import { useState } from "react";
 import { validateEmail } from "../../utils/helper";
-import axiosInstance from "../../utils/axiosInstance";
+
+import axios from "axios";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -28,10 +29,13 @@ const Login = () => {
 
     //Login API Call here
     try {
-      const response = await axiosInstance.post("/users/login", {
-        email: email,
-        password: password,
-      });
+      const response = await axios.post(
+        `${import.meta.env.BASE_URL}/users/login`,
+        {
+          email: email,
+          password: password,
+        }
+      );
 
       if (response.data && response.data.accessToken) {
         localStorage.setItem("token", response.data.accessToken);
