@@ -27,7 +27,8 @@ const isPinned = async (req, res) => {
         return res.status(200).json({
             error: false,
             message: "Note updated successfully",
-            isPinned: note.isPinned
+            isPinned: note.isPinned,
+            note
         });
     } catch (err) {
         return res.status(500).json({

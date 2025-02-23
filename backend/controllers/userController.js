@@ -1,6 +1,5 @@
 import { validateCreateUser } from '../validators/validateCreateUser.js';
 import userModel from '../models/user.model.js';
-import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
 export const createAccount = async (req, res) => {
@@ -41,13 +40,11 @@ export const createAccount = async (req, res) => {
 
         await user.save();
 
-        const accessToken = jwt.sign({ user }, process.env.JWT_SECRET);
 
         return res.json({
 
             error: false,
             user: user.fullName,
-            accessToken,
             message: "Registration Successful"
 
         });
@@ -59,7 +56,7 @@ export const createAccount = async (req, res) => {
         return res.status(500).json({
             error: true,
             message: "Failed to create user",
-            details: error.message,
+            details: err.message,
         })
 
     }
